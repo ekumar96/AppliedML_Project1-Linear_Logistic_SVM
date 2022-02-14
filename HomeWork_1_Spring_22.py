@@ -215,10 +215,22 @@ for index, binSize in enumerate(binSizes):
     axs[index].set(xlabel="Selling Price", ylabel="Number of Houses")
 
 
+# In[16]:
+
+
+binSizes = [500,100,20]
+figure, axs = plt.subplots(3, 1, figsize = (15, 10))
+for index, binSize in enumerate(binSizes):
+    axs[index].hist(np.log(auto_mpg_y), bins=binSize)
+    axs[index].set(xlabel="Selling Price", ylabel="Number of Houses")
+
+auto_mpg_y = np.log(auto_mpg_y)
+
+
 # **1.6. Plot the relationships between the label (Selling Price) and the continuous features (Mileage, km driven, engine, max power) using a small multiple of scatter plots. 
 # Make sure to label the axes. Do you see something interesting about the distributions of these features.**
 
-# In[16]:
+# In[17]:
 
 
 ### Your code here
@@ -237,7 +249,7 @@ print("I can see that Engine and Max power seem to have a positive correlation w
 
 # **1.7. Plot the relationships between the label (Selling Price) and the discrete features (fuel type, Seller type, transmission) using a small multiple of box plots. Make sure to label the axes.**
 
-# In[17]:
+# In[18]:
 
 
 ### Your code here
@@ -253,20 +265,20 @@ for index, feature in enumerate(cat_ft):
 
 # **1.8. From the visualizations above, do you think linear regression is a good model for this problem? Why and/or why not?**
 
-# In[18]:
+# In[19]:
 
 
 ### Your answer here
 print("Yes, I think linear regression is a good model for this problem because there seems to be a strong linear correlation with some of the continuous features.")
 
 
-# In[19]:
+# In[20]:
 
 
 auto_mpg_X['year'] =  2020 - auto_mpg_X['year']
 
 
-# In[20]:
+# In[21]:
 
 
 #dropping the car name as it is irrelevant.
@@ -286,7 +298,7 @@ auto_mpg_X.head()
 # 4. Add a column of ones to the feature matrices X_train, X_val, and X_test. This is a common trick so that we can learn a coefficient for the bias term of a linear model.
 # 
 
-# In[21]:
+# In[22]:
 
 
 # 1. If no categorical features in the synthetic dataset, skip this step
@@ -355,7 +367,7 @@ print(X_train[0])
 
 # **1.10. Implement a `LinearRegression` class with two methods: `train` and `predict`. You may NOT use sklearn for this implementation. You may, however, use `np.linalg.solve` to find the closed-form solution. It is highly recommended that you vectorize your code.**
 
-# In[22]:
+# In[23]:
 
 
 class LinearRegression():
@@ -412,7 +424,7 @@ class LinearRegression():
         return y_pred
 
 
-# In[23]:
+# In[24]:
 
 
 # Testing out functions
@@ -428,7 +440,7 @@ print(test.predict(X_val))
 
 # **1.11. A) Train a linear regression model ($\alpha = 0$) on the auto MPG training data. Make predictions and report the mean-squared error (MSE) on the training, validation, and test sets. Report the first 5 predictions on the test set, along with the actual labels.**
 
-# In[24]:
+# In[25]:
 
 
 ### Your code here
@@ -444,14 +456,14 @@ print("Training Set MSE:\t" + str(mse(y_train, linearRegModel.predict(X_train)))
 print("Validation Set MSE:\t" + str(mse(y_val, linearRegModel.predict(X_val))))
 print("Test Set MSE:\t\t" + str(mse(y_test, linearRegModel.predict(X_test))))
 print("First 5 test set:")
-predictions = linearRegModel.predict(X_test)
+predictions = np.exp(linearRegModel.predict(X_test))
 print("Predictions:\t" + str([round(x, 2) for x in predictions[:5]]))
-print("Actual:\t\t" + str(y_test[:5].tolist()))
+print("Actual:\t\t" + str([round(x, 2) for x in np.exp(y_test)[:5].tolist()]))
 
 
 # **B) As a baseline model, use the mean of the training labels (auto_mpg_y_train) as the prediction for all instances. Report the mean-squared error (MSE) on the training, validation, and test sets using this baseline. This is a common baseline used in regression problems and tells you if your model is any good. Your linear regression MSEs should be much lower than these baseline MSEs.**
 
-# In[25]:
+# In[26]:
 
 
 ### Your code here
@@ -470,7 +482,7 @@ print("Test Set Baseline MSE:\t\t" + str(mse(y_test, y_test_baseline)))
 
 # **1.12. Interpret your model trained on the auto MPG dataset using a bar chart of the model weights. Make sure to label the bars (x-axis) and don't forget the bias term! Use lecture 3, slide 15 as a reference. According to your model, which features are the greatest contributors to the selling price**
 
-# In[26]:
+# In[27]:
 
 
 ### Your code here
@@ -487,7 +499,7 @@ ax.tick_params(axis='x', rotation=90)
 # 
 # **1.13. Sweep out values for $\alpha$ using `alphas = np.logspace(-2, 1, 10)`. Perform a grid search over these $\alpha$ values, recording the training and validation MSEs for each $\alpha$. A simple grid search is fine, no need for k-fold cross validation. Plot the training and validation MSEs as a function of $\alpha$ on a single figure. Make sure to label the axes and the training and validation MSE curves. Use a log scale for the x-axis.**
 
-# In[27]:
+# In[28]:
 
 
 ### Your code here
@@ -510,7 +522,7 @@ plt.show()
 
 # **Explain your plot above. How do training and validation MSE behave with decreasing model complexity (increasing $\alpha$)?**
 
-# In[28]:
+# In[29]:
 
 
 ### Your answer here
@@ -519,7 +531,7 @@ print("Both seem to improve with decreasing model complexity, or by increasing a
 
 # **1.14. Using the $\alpha$ which gave the best validation MSE above, train a model on the training set. Report the value of $\alpha$ and its training, validation, and test MSE. This is the final tuned model which you would deploy in production.**
 
-# In[29]:
+# In[30]:
 
 
 ### Your code here
@@ -539,7 +551,7 @@ print("Final Tuned Model Test Set MSE:\t\t" + str(mse(y_test, linearRegModel.pre
 # 
 # **This dataset is used to identify a voice as male or female, based upon acoustic properties of the voice and speech.**
 
-# In[30]:
+# In[31]:
 
 
 voice_df = pd.read_csv("voice-classification.csv")
@@ -548,7 +560,7 @@ voice_df.head()
 
 # **Data - Checking Rows & Columns**
 
-# In[31]:
+# In[32]:
 
 
 #Number of Rows & Columns
@@ -559,7 +571,7 @@ print(voice_df.shape)
 # 
 # This is mainly to check class imbalance in the dataset, and to apply different techniques to balance the dataset, which we will learn later.
 
-# In[32]:
+# In[33]:
 
 
 #code here
@@ -573,7 +585,7 @@ print(voice_df['label'].value_counts())
 
 # **2.2 Plot the relationships between the label and the 20 numerical features using a small multiple of box plots. Make sure to label the axes. What useful information do this plot provide?**
 
-# In[33]:
+# In[34]:
 
 
 figure, axes = plt.subplots(4, 5, figsize = (30, 20))
@@ -587,7 +599,7 @@ print("These plots provide a great deal of useful information. Because these box
 
 # **2.3 Plot the correlation matrix, and check if there is high correlation between the given numerical features (Threshold >=0.9). If yes, drop those highly correlated features from the dataframe. Why is necessary to drop those columns before proceeding further?**
 
-# In[42]:
+# In[35]:
 
 
 corr = voice_df.corr()
@@ -625,7 +637,7 @@ print("It is important to remove these highly correlated features because multic
 # 
 # **Please note to replace the dataframe below with the new dataframe created after removing highly correlated features**
 
-# In[35]:
+# In[36]:
 
 
 # Split data into features and labels
@@ -646,7 +658,7 @@ print(voice_X.columns)
 # 
 # 5) Add a column of ones to the feature matrices of train, validation and test dataset. This is a common trick so that we can learn a coefficient for the bias term of a linear model.
 
-# In[36]:
+# In[37]:
 
 
 # 1/2. Encode the label in the dataset, and convert to numpy vector
@@ -720,7 +732,7 @@ print(X_train[0])
 
 # Implement a LogisticRegression class with five methods: train, predict, calculate_loss, calculate_gradient, and calculate_sigmoid. **You may NOT use sklearn for this implementation. It is highly recommended that you vectorize your code.**
 
-# In[37]:
+# In[38]:
 
 
 class LogisticRegression():
@@ -852,8 +864,10 @@ class LogisticRegression():
 # 
 # C. Compare accuracy on the test dataset for both the scenarios.
 
-# In[38]:
+# In[39]:
 
+
+from sklearn.metrics import matthews_corrcoef
 
 #Part A: Training with given hyperparameters
 presetAlpha, preset_t, presetEta = 0, 100, 1e-3
@@ -879,14 +893,23 @@ etas = np.logspace(-5, -3, 5)
 hparamSearchSpace = list(set(itertools.product(alphas,t_epochs, etas)))
 rand_hParams = random.sample(hparamSearchSpace, 20)
 
-bestLoss = np.inf
+
+plt.title("Loss over epochs, Method B")
+plt.xlabel("Epochs")
+plt.ylabel("Loss")
+bestMCC = -np.inf
 #for alpha, t, eta in hparamSearchSpace: #could do this to search whole space
 for alpha, t, eta in rand_hParams:
     logRegSearch = LogisticRegression(alpha, int(t), eta)
     thisLoss = logRegSearch.train(X_train, y_train)
-    #print(thisLoss[-1])
-    if thisLoss[-1] < bestLoss:
-        bestLoss = thisLoss[-1]
+    # After training model, use VALIDATION set prediction to choose hyperparameters
+    # Choose to use MCC score instead of accuracy (takes false positives and false negatives into account for score calculation)
+    y_pred = logRegSearch.predict(X_val)
+    thisAcc = 1-np.mean(np.abs(y_pred-y_val))
+    thisMCC = matthews_corrcoef(y_val, y_pred)
+    if thisMCC > bestMCC:
+        bestMCC = thisMCC
+        bestAcc = thisAcc
         bestAlpha, best_t, bestEta, bestLosses = alpha, t, eta, thisLoss
         bestModel = logRegSearch
         
@@ -895,10 +918,12 @@ plt.title("Loss over epochs, Method B")
 plt.xlabel("Epochs")
 plt.ylabel("Loss")
 plt.show()
-print("Best alpha value:\t"+str(bestAlpha))
-print("Best epoch length:\t"+str(best_t))
-print("Best learning rate:\t"+str(bestEta))
-print("Best Loss:\t\t"+str(bestLoss))
+print("Best alpha value:\t\t"+str(bestAlpha))
+print("Best epoch length:\t\t"+str(best_t))
+print("Best learning rate:\t\t"+str(bestEta))
+print("Best Loss:\t\t\t"+str(bestLosses[-1]))
+print("Best (Validation) Accuracy:\t"+str(bestAcc))
+print("Best (Validation) MCC:\t\t"+str(bestMCC))
 
 #Part C: Comparing accuracy for both scenarios
 yA_pred = logRegA.predict(X_test)
@@ -915,7 +940,7 @@ print("Scenario B's Accuracy on Test Dataset:\t"+str(B_accuracy))
 # 
 # Interpret your trained model using a bar chart of the model weights. Make sure to label the bars (x-axis) and don't forget the bias term! 
 
-# In[39]:
+# In[40]:
 
 
 features = list(voice_X.columns)
@@ -937,7 +962,7 @@ ax.tick_params(axis='x', rotation=90)
 # C) Please report the support vectors in both the cases and what do you observe? Explain
 # 
 
-# In[40]:
+# In[41]:
 
 
 from sklearn.compose import make_column_transformer
@@ -964,7 +989,7 @@ print("\nThe RBF Kernel gave better accuracy on the test dataset. It is usually 
 
 # The C parameter tells the SVM optimization how much you want to avoid misclassifying each training example. For large values of C, the optimization will choose a smaller-margin hyperplane if that hyperplane does a better job of getting all the training points classified correctly. Conversely, a very small value of C will cause the optimizer to look for a larger-margin separating hyperplane, even if that hyperplane misclassifies more points.
 
-# In[41]:
+# In[42]:
 
 
 from sklearn.model_selection import GridSearchCV
