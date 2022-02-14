@@ -2,6 +2,7 @@
 # coding: utf-8
 
 # # Homework 1: Applied Machine Learning - Linear | Logisitc | SVM
+# Eshan Kumar, ek3227
 
 # In[1]:
 
