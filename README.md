@@ -1,4 +1,4 @@
-# Project 1 -spring2022
+# Project 1 - Spring 2022
 Applied ML Spring 2022 Project 1
 
 Eshan Kumar, ek3227
